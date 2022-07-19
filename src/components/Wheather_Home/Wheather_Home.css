@@ -1,0 +1,77 @@
+.form-group{
+    width: 50%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    margin-top: 100px;
+}
+
+.form-group input{
+    height: 40px;
+    border-radius: 12px;
+}
+
+.form-group button{
+    margin-top: 15px;
+    height: 35px;
+    border-radius: 12px;
+}
+.wheather-body{
+    background-image: url('../../assets/pexels-josh-sorenson-1154510.jpg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    margin: auto;
+    color: white;
+    
+}
+
+.upper-Wheather-details{
+    display: flex;
+}
+.upper-Wheather{
+    margin: 10px 50px;
+}
+.upper-left{
+    width: 30%;
+}
+
+.upper-right{
+    width: 40%;
+    margin-top: 30px;
+}
+
+td{
+    border: none;
+    color: white;
+}
+
+.bottom-Wheather{
+    margin: 10px 50px;
+    display: flex;
+
+}
+.bottom-left{
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+}
+
+.bottom-left label{
+    margin-top: 5px;
+}
+
+.bottom-right{
+    margin-top: 15px;
+}
+
+.bottom-right label{
+    margin: 0 15px;
+}
+
+td img{
+    width: 40px;
+    height: 40px;
+}
