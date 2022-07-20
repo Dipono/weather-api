@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # weather-api
 =======
 # Getting Started with Create React App
@@ -71,4 +71,3 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
->>>>>>> fdd9311b757342d3c1a689e265f46907afdb34d8
