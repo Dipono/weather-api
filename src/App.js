@@ -8,7 +8,7 @@ function App() {
       <Routes>
         <Route exact path='/' element={<WheatherHome />} />
       </Routes>
-    </Router>
+    </Router> 
   );
 }
 export default App;
