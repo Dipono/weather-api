@@ -12,7 +12,7 @@ function Wheather_Home() {
     const [SearchWord, setSearchWord] = useState('')
     const [Pressure, setPressure] = useState('')
     const [Degrees, setDegrees] = useState('')
-
+ 
     //upcoming Weather
     const [FirstTime, setFirstTime] = useState('')
     const [LastTime, setLastTime] = useState('')
