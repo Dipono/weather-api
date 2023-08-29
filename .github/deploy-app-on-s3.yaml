@@ -1,0 +1,83 @@
+name: Node CI-CD for build, test, and deploy
+on:
+  push:
+    branches: 
+      - main
+      - production
+      - PBI-**
+      - coldfix
+  pull_request:
+    branches: 
+      - production
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use node 16.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.15.1
+      - run: npm ci
+build:
+    needs: install
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 16.x]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use node ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+- run: npm install
+      - run: npm run build
+  
+  sonarscan:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: run test and coverage
+      run: |
+        npm install
+        npm test
+    - name: SonarQube Scan
+      uses: sonarsource/sonarqube-scan-action@master
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/production' || github.ref == 'refs/heads/coldfix'
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        python-version: 3.9
+    - name: Cofig AWS Cred
+      run: |
+        pip install awscli
+        aws configure set region ap-southeast-2
+        aws configure set output json
+        aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY }} 
+        aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_KEY }}
+- name: deploy with s3 sync and Invalidate CloudFront cache
+      run: |
+        npm install
+        if [ ${{ github.ref }} = 'refs/heads/main' ]
+        then
+         export REACT_APP_BACKEND_URL=${{ secrets.REACT_APP_BACKEND_URL_STAGING }}
+         npm run build
+         aws s3 sync ./build s3://${{ secrets.S3_BUCKET_NAME_STAGING }}/
+         aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_STAGING }} --paths "/*"
+        elif [ ${{ github.ref }} = 'refs/heads/production' ]
+        then
+           export REACT_APP_BACKEND_URL=${{ secrets.REACT_APP_BACKEND_URL_PRODUCTION }}
+           npm run build
+           aws s3 sync ./build s3://${{ secrets.S3_BUCKET_NAME_PROD }}/ 
+           aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_PROD }} --paths "/*"
+        fi
